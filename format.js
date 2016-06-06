@@ -1,4 +1,4 @@
-function formatCopiedConversation(raw_text) {
+function formatCopiedConversation(raw_text, fancy_formatting) {
     var lines = raw_text.split('\n');
     var time_regex = /\[(\d)?\d:\d\d( [A,P]M)?\]/;
     var output_lines = [];
@@ -17,7 +17,6 @@ function formatCopiedConversation(raw_text) {
         } else {
             line_type = 'START';
         }
-        console.log(line, match_position, line_type);
 
         if (line_type == 'START') {
             var author = line.substring(0, match_position - 1);
@@ -25,7 +24,11 @@ function formatCopiedConversation(raw_text) {
             if (output_lines.length > 0) {
                 output_lines.push('');
             }
-            output_lines.push('**' + author + '** ' + time);
+            if (fancy_formatting) {
+                output_lines.push('**' + author + '** ' + time);
+            } else {
+                output_lines.push(author + ' ' + time);
+            }
         } else if (line_type == 'TEXT') {
             output_lines.push(line);
         }

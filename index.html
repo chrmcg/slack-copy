@@ -6,6 +6,17 @@
 #text-input, #text-output {
     width: 49%;
     height: 100%;
+    float: left;
+}
+#options {
+    height: 20px;
+    float: left;
+}
+#text-output {
+    height: calc(100% - 20px);
+}
+#text-output, #options {
+    margin-left: 5px;
 }
 </style>
 </head>
@@ -13,12 +24,28 @@
     <div id="all">
         <textarea id="text-input" placeholder="Paste text copied from Slack into this box"></textarea>
         <textarea id="text-output" placeholder="Formatted conversation will appear in this box"></textarea>
+        <div id="options">Format for:
+            <input type="radio" name="formatting" value="plaintext"> plain text
+            <input type="radio" name="formatting" value="post" checked="checked"> Slack post
+        </div>
     </div>
     <script>
-    document.getElementById('text-input').oninput = function() {
+    function doFormatting() {
         var raw_text = document.getElementById('text-input').value;
-        document.getElementById('text-output').value = formatCopiedConversation(raw_text);
+        var radio_buttons = document.getElementsByName('formatting');
+        var which_radio_button_is_checked = '';
+        for (var i = 0; i < radio_buttons.length; i++) {
+            if (radio_buttons[i].checked === true) {
+                which_radio_button_is_checked = radio_buttons[i].value;
+            }
+        }
+        var fancy_formatting = (which_radio_button_is_checked == 'post');
+        document.getElementById('text-output').value = formatCopiedConversation(raw_text, fancy_formatting);
+
     }
+    document.getElementById('text-input').oninput = doFormatting;
+    document.getElementsByName('formatting')[0].onclick = doFormatting;
+    document.getElementsByName('formatting')[1].onclick = doFormatting;
     </script>
 </body>
 </html>
